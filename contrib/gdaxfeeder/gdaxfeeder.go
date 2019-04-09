@@ -15,13 +15,13 @@ import (
 	gdax "github.com/preichenberger/go-gdax"
 )
 
-type byTime []gdax.HistoricRate
+type ByTime []gdax.HistoricRate
 
-func (a byTime) Len() int           { return len(a) }
-func (a byTime) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
-func (a byTime) Less(i, j int) bool { return a[i].Time.Before(a[j].Time) }
+func (a ByTime) Len() int           { return len(a) }
+func (a ByTime) Swap(i, j int)      { a[i], a[j] = a[j], a[i] }
+func (a ByTime) Less(i, j int) bool { return a[i].Time.Before(a[j].Time) }
 
-// FetcherConfig is the configuration for GdaxFetcher you can define in
+// FetchConfig is the configuration for GdaxFetcher you can define in
 // marketstore's config file through bgworker extension.
 type FetcherConfig struct {
 	// list of currency symbols, defults to ["BTC", "ETH", "LTC", "BCH"]
@@ -158,7 +158,7 @@ func (gd *GdaxFetcher) Run() {
 			low := make([]float64, 0)
 			close := make([]float64, 0)
 			volume := make([]float64, 0)
-			sort.Sort(byTime(rates))
+			sort.Sort(ByTime(rates))
 			for _, rate := range rates {
 				if rate.Time.After(lastTime) {
 					lastTime = rate.Time
